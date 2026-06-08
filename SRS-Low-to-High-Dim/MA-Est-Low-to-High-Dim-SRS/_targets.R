@@ -22,60 +22,44 @@ source(paste0(srs_templates_path, "HT-Estimator-Template.R"))
 source(paste0(srs_templates_path, "EN-Estimator-Template.R"))
 source(srs_target_data_gen_path)
 
-# Other targets files
-source(paste0(srs_target_ext_paths, "xgbtree-targets.R"))
-source(paste0(srs_target_ext_paths, "Ranger-RF-Targets.R"))
-source(paste0(srs_target_ext_paths, "LASSO-PEML-Bootstrap.R"))
 
 # Setup data storage
 srs_data_store_model_1 = paste0(here::here(), "/Data/SRS-Model-1-Dim/Variance/")
 
 if(dir.exists(srs_data_store_model_1 ) == FALSE)
 {
-  dir.create(srs_data_store_model_1 )
+  dir.create(srs_data_store_model_1, recursive = TRUE)
 }
 
 
-srs_data_store_model_1_peml = paste0(here::here(), "/Data/SRS-Model-1-Dim/Variance/peml/")
-
-if(dir.exists(srs_data_store_model_1_peml) == FALSE)
-{
-  dir.create(srs_data_store_model_1_peml)
-}
-
-srs_data_store_model_2_peml = paste0(here::here(), "/Data/SRS-Model-2-Dim/Variance/peml/")
-
-if(dir.exists(srs_data_store_model_2_peml) == FALSE)
-{
-  dir.create(srs_data_store_model_2_peml)
-}
-
-srs_data_store_model_3_peml = paste0(here::here(), "/Data/SRS-Model-3-Static-Dim/Variance/peml/")
-
-if(dir.exists(srs_data_store_model_3_peml) == FALSE)
-{
-  dir.create(srs_data_store_model_3_peml)
-}
-
-srs_data_store_model_4_peml = paste0(here::here(), "/Data/SRS-Model-4-Dim/Variance/peml/")
-
-if(dir.exists(srs_data_store_model_4_peml) == FALSE)
-{
-  dir.create(srs_data_store_model_4_peml)
-}
 
 srs_data_store_model_2 = paste0(here::here(), "/Data/SRS-Model-2-Dim/Variance/")
 
-srs_data_store_model_2_rf_term_node_9 = paste0(srs_data_store_model_2, "term_node_9_20")
 
-if(dir.exists(srs_data_store_model_2_rf_term_node_9) == FALSE)
+if(dir.exists(srs_data_store_model_2) == FALSE)
 {
-  dir.create(srs_data_store_model_2_rf_term_node_9)
+  dir.create(srs_data_store_model_2, recursive = TRUE)
 }
+
+
+
 
 srs_data_store_model_3 = paste0(here::here(), "/Data/SRS-Model-3-Static-Dim/Variance/")
 
+
+if(dir.exists(srs_data_store_model_3) == FALSE)
+{
+  dir.create(srs_data_store_model_3, recursive = TRUE)
+}
+
+
 srs_data_store_model_4 = paste0(here::here(), "/Data/SRS-Model-4-Dim/Variance/")
+
+if(dir.exists(srs_data_store_model_4) == FALSE)
+{
+  dir.create(srs_data_store_model_4, recursive = TRUE)
+}
+
 
 srs_model_3_data_dir = paste0(here::here(), "/Data/SRS-Model-3-Static-Dim/")
 
