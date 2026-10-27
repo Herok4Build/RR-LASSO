@@ -1,0 +1,289 @@
+---
+title: "Relative Bias and MSE Plots"
+author: "Thomas Johnson III"
+format:
+  pdf:
+    toc: true
+    toc-depth: 6
+execute: 
+  message: false
+  warning: false
+  echo: false
+---
+
+```{r}
+# Load the packages
+library(tidyverse)
+library(tables)
+library(ggh4x)
+```
+
+```{r}
+# Get the negation
+`%!in%` = Negate(`%in%`)
+```
+
+
+# Overview
+
+```{r}
+# Build plots
+construct_rel_bias_plot = function(rel_bias_data,n_val_to_exclude = 1000,
+                                   include_title = TRUE)
+{
+  if (include_title == TRUE)
+  {
+    title_name = "SRS Relative Bias Results"
+  }
+  else
+  {
+      title_name = ""
+  }
+  rel_bias_plot = rel_bias_data %>%
+    filter(estimator != "RF", n_size != n_val_to_exclude, pred !=75) %>%
+    mutate(n_size = factor(n_size), rho = as.numeric(rho)) %>%
+    ggplot(aes(x = rho, y = rel_bias, color=estimator)) +
+    facet_grid( vars(pred), vars( model), scales = "free_y", labeller = plot_labeller_mser) +
+    geom_line(aes(linetype = n_size), size = 1) +
+    geom_point(aes(shape = estimator)) +
+    theme_bw() +
+    labs(title=title_name,
+       x = bquote(rho), y = "Relative Bias") +
+    theme(axis.text.x = element_text(angle = 90, face = "bold", size = 12),
+        axis.text.y = element_text(size=12),
+        strip.text = element_text(size = 12),
+        axis.title = element_text(size =15),
+        title = element_text(size=18),
+        legend.text = element_text(size = 12),
+        legend.position = "top") +
+    scale_x_continuous(breaks = c(0.1,0.3,0.5,0.7)) +
+    guides(color = guide_legend(title="Estimator"),
+         shape = guide_legend(title = "Estimator"),
+         linetype = guide_legend(title = "n")) 
+  return(rel_bias_plot)
+}
+# Build the MSE plot
+construct_mse_plot = function(mse_data, n_val_to_exclude = 1000,
+                                   include_title = TRUE,
+                              exclude_estimators = c("RF"))
+{
+  if (include_title == TRUE)
+  {
+    title_name = "SRS MSE Results"
+  }
+  else
+  {
+      title_name = ""
+  }
+  mse_plot = mse_data %>%
+    filter(estimator %!in% exclude_estimators, n_size != n_val_to_exclude, pred !=75) %>%
+    mutate(n_size = factor(n_size), rho = as.numeric(rho)) %>%
+    ggplot(aes(x = rho, y = mse, color=estimator)) +
+    facet_grid( vars(pred), vars( model), scales = "free_y", labeller = plot_labeller_mser) +
+    geom_line(aes(linetype = n_size), size = 1) +
+    geom_point(aes(shape = estimator)) +
+    theme_bw() +
+    labs(title=title_name,
+       x = bquote(rho), y = "MSE") +
+    theme(axis.text.x = element_text(angle = 90, face = "bold", size = 12),
+        axis.text.y = element_text(size=12),
+        strip.text = element_text(size = 12),
+        axis.title = element_text(size =15),
+        title = element_text(size=18),
+        legend.text = element_text(size = 12),
+        legend.position = "top") +
+    scale_x_continuous(breaks = c(0.1,0.3,0.5,0.7)) +
+    guides(color = guide_legend(title="Estimator"),
+         shape = guide_legend(title = "Estimator"),
+         linetype = guide_legend(title = "n")) 
+  return(mse_plot)
+}
+
+# Build the MSE plot
+construct_mse_plot_free_axes = function(mse_data, n_val_to_exclude = 1000,
+                                   include_title = TRUE,
+                              exclude_estimators = c("RF"))
+{
+  if (include_title == TRUE)
+  {
+    title_name = "SRS MSE Results"
+  }
+  else
+  {
+      title_name = ""
+  }
+  mse_plot = mse_data %>%
+    filter(estimator %!in% exclude_estimators, n_size != n_val_to_exclude, pred !=75) %>%
+    mutate(n_size = factor(n_size), rho = as.numeric(rho)) %>%
+    ggplot(aes(x = rho, y = mse, color=estimator)) +
+    facet_grid2( vars(pred), vars( model), scales = "free_y", labeller = plot_labeller_mser,
+                  independent = "y") +
+    geom_line(aes(linetype = n_size), size = 1) +
+    geom_point(aes(shape = estimator)) +
+    theme_bw() +
+    labs(title=title_name,
+       x = bquote(rho), y = "MSE") +
+    theme(axis.text.x = element_text(angle = 90, face = "bold", size = 12),
+        axis.text.y = element_text(size=12),
+        strip.text = element_text(size = 12),
+        axis.title = element_text(size =15),
+        title = element_text(size=18),
+        legend.text = element_text(size = 12),
+        legend.position = "top") +
+    scale_x_continuous(breaks = c(0.1,0.3,0.5,0.7)) +
+    guides(color = guide_legend(title="Estimator"),
+         shape = guide_legend(title = "Estimator"),
+         linetype = guide_legend(title = "n")) 
+  return(mse_plot)
+}
+# MSE Plot with n on the axes
+construct_mse_plot_free_axes_alt = function(mse_data, n_val_to_exclude = 1000,
+                                   include_title = TRUE,
+                              exclude_estimators = c("RF"))
+{
+  if (include_title == TRUE)
+  {
+    title_name = "SRS MSE Results"
+  }
+  else
+  {
+      title_name = ""
+  }
+  mse_plot = mse_data %>%
+    filter(estimator %!in% exclude_estimators, n_size != n_val_to_exclude, pred !=75) %>%
+    mutate(rho = factor(rho)) %>%
+    ggplot(aes(x = n_size, y = mse, color=estimator)) +
+    facet_grid2( vars(pred), vars( model), scales = "free_y", labeller = plot_labeller_mser,
+                  independent = "y") +
+    geom_line(aes(linetype = rho), size = 1) +
+    geom_point(aes(shape = estimator)) +
+    theme_bw() +
+    labs(title=title_name,
+       x = "n", y = "MSE") +
+    theme(axis.text.x = element_text(angle = 90, face = "bold", size = 12),
+        axis.text.y = element_text(size=12),
+        strip.text = element_text(size = 12),
+        axis.title = element_text(size =15),
+        title = element_text(size=18),
+        legend.text = element_text(size = 12),
+        legend.position = "top") +
+    scale_x_continuous(breaks = c(250, 500)) +
+    guides(color = guide_legend(title="Estimator"),
+         shape = guide_legend(title = "Estimator"),
+         linetype = guide_legend(title = bquote(rho))) 
+  return(mse_plot)
+}
+```
+
+```{r}
+# Make a labeller for plots
+predictor_labeller = function(size_string)
+{
+  return(paste0("p=",size_string))
+}
+rho_labeller = function(rho_string)
+{
+  return(paste0("rho==",rho_string))
+}
+
+model_labeller = function(model_string)
+{
+  return(model_string)
+}
+
+plot_labeller_mser = labeller(rho = as_labeller(rho_labeller, label_parsed), pred = predictor_labeller, Model = model_labeller)
+```
+
+These plots are for the relative biases and MSEs for the SRS plots.
+
+```{r}
+# Load in the data
+data_locations = c(paste0(here::here(), 
+                          "/Data/SRS-Model-1-Dim/Rel-Bias/relative-bias-model-1.csv"),
+                   paste0(here::here(), 
+                          "/Data/SRS-Model-2-Dim/Rel-Bias/relative-bias-model-2.csv"),
+                   paste0(here::here(), 
+                          "/Data/SRS-Model-3-Static-Dim/Rel-Bias/relative-bias-model-3.csv"),
+                   paste0(here::here(), 
+                          "/Data/SRS-Model-4-Dim/Rel-Bias/relative-bias-model-4.csv"))
+
+
+model_1_bias_mse = read_csv(data_locations[1],lazy = TRUE) %>%
+  mutate(model = "Model 1", rho = as.character(rho))
+
+model_2_bias_mse = read_csv(data_locations[2],lazy = TRUE)%>%
+  mutate(model = "Model 2", rho = as.character(rho))
+
+model_3_bias_mse = read_csv(data_locations[3],lazy = TRUE)%>%
+  mutate(model = "Model 3", rho = as.character(rho))
+
+model_4_bias_mse = read_csv(data_locations[4],lazy = TRUE)%>%
+  mutate(model = "Model 4", rho = as.character(rho))
+
+# Organize the data
+srs_models_bias_mse = bind_rows(list(model_1_bias_mse,
+                                 model_2_bias_mse,
+                                 model_3_bias_mse,
+                                 model_4_bias_mse)) %>%
+  mutate(rho = case_when( rho == "rho_0.1" ~ "0.1",
+                          rho == "rho_0.3" ~ "0.3",
+                          rho == "rho_0.5" ~ "0.5",
+                          rho == "rho_0.7" ~ "0.7",
+                          .default = as.character(rho)),
+         model = case_when(model == "Model 2" ~ "Model 4",
+                           model == "Model 3" ~ "Model 2",
+                           model == "Model 4" ~ "Model 3",
+                           .default = model))
+```
+
+# Plots
+
+## Relative Bias
+
+```{r fig.height=16, fig.width=12}
+construct_rel_bias_plot(srs_models_bias_mse )
+```
+
+We can observe that all of the relative biases are low for the included estimators.
+
+## MSE Results
+
+MSE results with y-axis free per row.
+
+```{r fig.height=16, fig.width=12}
+construct_mse_plot(srs_models_bias_mse )
+```
+
+MSE results with separate axes:
+
+
+```{r fig.height=16, fig.width=12}
+construct_mse_plot_free_axes(srs_models_bias_mse)
+```
+
+Separate y-axes and HT estimator is excluded:
+
+```{r fig.height=16, fig.width=12}
+construct_mse_plot_free_axes(srs_models_bias_mse, exclude_estimators = c("RF", "HT"))
+```
+
+We do see consistency in the estimators, particularly the LASSO (MSE decreases as $n$ increases).
+
+Plot with $n$ on the x-axis:
+
+```{r fig.height=16, fig.width=12}
+construct_mse_plot_free_axes_alt(srs_models_bias_mse)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
