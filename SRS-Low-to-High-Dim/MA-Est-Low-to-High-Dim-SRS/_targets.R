@@ -402,6 +402,18 @@ list(
   tar_target(enet_estimator_model_1_25_pred_results,
              produce_csv(enet_estimator_model_1_25_pred, 
                          srs_data_store_model_1, "elastic-net-plugin-var-sim-model-1-25-pred.csv")),
+
+  # 10-fold cross-validation
+  tar_target(enet_estimator_model_1_25_pred_10_fold,
+             map_dfr(model_1_data_list[["25"]], elastic_net_var_results_10_fold,
+                     n_sizes = c(  250, 500, 1000), cores = core_alloc,
+                     m=1000,
+                     randomizer = rand_y_2norm_proc,
+                     .id = "rho")),
+  tar_target(enet_estimator_model_1_25_pred_10_fold_results,
+             produce_csv(enet_estimator_model_1_25_pred_10_fold, 
+                         srs_data_store_model_1, "elastic-net-10-fold-plugin-var-sim-model-1-25-pred.csv")),
+  
   
   ### 50 Predictors --------------
   tar_target(enet_estimator_model_1_50_pred,
@@ -414,6 +426,18 @@ list(
              produce_csv(enet_estimator_model_1_50_pred, 
                          srs_data_store_model_1, "elastic-net-plugin-var-sim-model-1-50-pred.csv")),
   
+
+  tar_target(enet_estimator_model_1_50_pred_10_fold,
+             map_dfr(model_1_data_list[["50"]], elastic_net_var_results_10_fold,
+                     n_sizes = c(  250, 500, 1000), cores = core_alloc,
+                     m=1000,
+                     randomizer = rand_y_2norm_proc,
+                     .id = "rho")),
+  tar_target(enet_estimator_model_1_50_pred_10_fold_results,
+             produce_csv(enet_estimator_model_1_50_pred_10_fold, 
+                         srs_data_store_model_1, "elastic-net-10-fold-plugin-var-sim-model-1-50-pred.csv")),
+  
+
   ### 100 Predictors --------------
   tar_target(enet_estimator_model_1_100_pred,
              map_dfr(model_1_data_list[["100"]], elastic_net_var_results,
@@ -425,6 +449,17 @@ list(
              produce_csv(enet_estimator_model_1_100_pred, 
                          srs_data_store_model_1, "elastic-net-plugin-var-sim-model-1-100-pred.csv")),
   
+  tar_target(enet_estimator_model_1_100_pred_10_fold,
+             map_dfr(model_1_data_list[["100"]], elastic_net_var_results_10_fold,
+                     n_sizes = c(  250, 500, 1000), cores = core_alloc,
+                     m=1000,
+                     randomizer = rand_y_2norm_proc,
+                     .id = "rho")),
+  tar_target(enet_estimator_model_1_100_pred_10_fold_results,
+             produce_csv(enet_estimator_model_1_100_pred_10_fold, 
+                         srs_data_store_model_1, "elastic-net-10-fold-plugin-var-sim-model-1-100-pred.csv")),
+  
+
   ### 200 Predictors --------------
   tar_target(enet_estimator_model_1_200_pred,
              map_dfr(model_1_data_list[["200"]], elastic_net_var_results,
@@ -435,6 +470,17 @@ list(
   tar_target(enet_estimator_model_1_200_pred_results,
              produce_csv(enet_estimator_model_1_200_pred, 
                          srs_data_store_model_1, "elastic-net-plugin-var-sim-model-1-200-pred.csv")),
+
+  tar_target(enet_estimator_model_1_200_pred_10_fold,
+             map_dfr(model_1_data_list[["200"]], elastic_net_var_results_10_fold,
+                     n_sizes = c(  250, 500, 1000), cores = core_alloc,
+                     m=1000,
+                     randomizer = rand_y_2norm_proc,
+                     .id = "rho")),
+  tar_target(enet_estimator_model_1_200_pred_10_fold_results,
+             produce_csv(enet_estimator_model_1_200_pred_10_fold, 
+                         srs_data_store_model_1, "elastic-net-10-fold-plugin-var-sim-model-1-200-pred.csv")),
+  
   
   ### 300 Predictors --------------
   tar_target(enet_estimator_model_1_300_pred,
@@ -446,8 +492,19 @@ list(
   tar_target(enet_estimator_model_1_300_pred_results,
              produce_csv(enet_estimator_model_1_300_pred, 
                          srs_data_store_model_1, "elastic-net-plugin-var-sim-model-1-300-pred.csv")),
+
+  tar_target(enet_estimator_model_1_300_pred_10_fold,
+             map_dfr(model_1_data_high_dim_list[["300"]], elastic_net_var_results_10_fold,
+                     n_sizes = c(  250, 500, 1000), cores = core_alloc,
+                     m=1000,
+                     randomizer = rand_y_2norm_proc,
+                     .id = "rho")),
+  tar_target(enet_estimator_model_1_300_pred_10_fold_results,
+             produce_csv(enet_estimator_model_1_300_pred_10_fold, 
+                         srs_data_store_model_1, "elastic-net-10-fold-plugin-var-sim-model-1-300-pred.csv")),
   
-  ### 200 Predictors --------------
+  
+  ### 600 Predictors --------------
   tar_target(enet_estimator_model_1_600_pred,
              map_dfr(model_1_data_high_dim_list[["600"]], elastic_net_var_results,
                      n_sizes = c(  250, 500, 1000), cores = core_alloc,
@@ -457,6 +514,17 @@ list(
   tar_target(enet_estimator_model_1_600_pred_results,
              produce_csv(enet_estimator_model_1_600_pred, 
                          srs_data_store_model_1, "elastic-net-plugin-var-sim-model-1-600-pred.csv")),
+
+  tar_target(enet_estimator_model_1_600_pred_10_fold,
+             map_dfr(model_1_data_high_dim_list[["600"]], elastic_net_var_results_10_fold,
+                     n_sizes = c(  250, 500, 1000), cores = core_alloc,
+                     m=1000,
+                     randomizer = rand_y_2norm_proc,
+                     .id = "rho")),
+  tar_target(enet_estimator_model_1_600_pred_10_fold_results,
+             produce_csv(enet_estimator_model_1_600_pred_10_fold, 
+                         srs_data_store_model_1, "elastic-net-10-fold-plugin-var-sim-model-1-600-pred.csv")),
+  
   
   # Model 2 -----------------------------------
   tar_target(model_2_data_list, model_2_data_list_create(N = 5000, data.seedling = 12)),
