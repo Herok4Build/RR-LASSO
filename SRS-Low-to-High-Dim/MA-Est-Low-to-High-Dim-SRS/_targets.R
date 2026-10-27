@@ -852,6 +852,19 @@ list(
   tar_target(enet_estimator_model_2_25_pred_results,
              produce_csv(enet_estimator_model_2_25_pred, 
                          srs_data_store_model_2, "elastic-net-plugin-var-sim-model-2-25-pred.csv")),
+
+  # 10-fold cross-validation
+  tar_target(enet_estimator_model_1_25_pred_10_fold,
+             map_dfr(model_1_data_list[["25"]], elastic_net_var_results_10_fold,
+                     n_sizes = c(  250, 500, 1000), cores = core_alloc,
+                     m=1000,
+                     randomizer = rand_y_2norm_proc,
+                     .id = "rho")),
+  tar_target(enet_estimator_model_1_25_pred_10_fold_results,
+             produce_csv(enet_estimator_model_1_25_pred_10_fold, 
+                         srs_data_store_model_1, "elastic-net-10-fold-plugin-var-sim-model-1-25-pred.csv")),
+  
+  
   
   ### 50 Predictors --------------
   tar_target(enet_estimator_model_2_50_pred,
